@@ -38,12 +38,17 @@ WINDOW_SIZE = 50
 def load_history():
     try:
         df = pd.read_csv(BUFFER_FILE)
+        df["Date"] = pd.to_datetime(df["Date"])
+        df.sort_values("Date", inplace=True)
+        return df
     except:
         df = pd.DataFrame(columns=["Open","High","Low","Close","Volume"])
     return df
 
 
 def save_history(df):
+    df.drop_duplicates(subset=["Date"], inplace=True)
+    df.sort_values("Date", inplace=True)
     df.to_csv(BUFFER_FILE, index=False)
 
 
@@ -104,12 +109,15 @@ def home():
         history_df = load_history()
 
         new_row = pd.DataFrame([{
+            "Date": pd.Timestamp.now(),
             "Open": float(request.form["Open"]),
             "High": float(request.form["High"]),
             "Low": float(request.form["Low"]),
             "Close": float(request.form["Close"]),
             "Volume": float(request.form["Volume"])
         }])
+
+        new_row["Date"] = pd.to_datetime(new_row["Date"])
 
         # Append new candle
         history_df = pd.concat([history_df, new_row], ignore_index=True)

@@ -32,7 +32,7 @@
 {% if prediction is not none %}
 <hr>
 <h3>Prediction Output</h3>
-<p>Predicted Return = {{ prediction }}</p>
+<p>Predicted Return = {{ "%.4f"|format(prediction * 100) }}%</p>
 {% endif %}
 
 </body>
