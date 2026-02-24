@@ -41,11 +41,10 @@ This project predicts the next day's NIFTY50 index price using various machine l
 1. **Data Collection**: Run `src/getting_data.py` to fetch or prepare the data.
 2. **Exploratory Data Analysis**: Open `src/eda.ipynb` for data exploration.
 3. **Model Training and Evaluation**: Run `src/model.ipynb` to train models and view results.
-4. **Results**: Check `results.txt` for model performance metrics.
+4. **Results**: Check `results/` for model performance metrics.
 
 ## Data
 - **Source**: NIFTY50 historical data (CSV format)
-- **Location**: `data/NIFTY50_data.csv`
 - **Features**: Date, Open, High, Low, Close, Volume, plus engineered features like Return, RSI, Volatility, etc.
 - **Target**: Next day's percentage return
 
