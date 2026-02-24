@@ -81,6 +81,17 @@ Based on the latest evaluation:
 - **Directional Accuracy**: 0.5126050420168067
 - **Final Equity**: 1.1252386647447876
 
+### Plots
+Below are two key EDA plots included in the repository:
+
+- **100 Day Moving Average**
+
+   ![100 Day Moving Average](plots/100_Day_Moving_Average.png)
+
+- **Price to Rolling Close Ratio**
+
+   ![Price to Rolling Close Ratio](plots/Price_to_Rolling_Close_Ratio.png)
+
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request.
 
