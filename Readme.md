@@ -65,21 +65,21 @@ The following models are trained and evaluated:
 ## Results
 Based on the latest evaluation:
 
-| Model | MSE       | MAE       | Directional Accuracy | Final Equity |
-|-------|-----------|-----------|----------------------|--------------|
-| rf    | 0.00007803 | 0.00667636 | 0.4756              | 0.9434      |
-| xgb   | 0.00006936 | 0.00632260 | 0.4588              | 0.9044      |
-| lgbm  | 0.00006852 | 0.00625871 | 0.4773              | 1.0309      |
-| lr    | 0.00006129 | 0.00560635 | 0.5378              | 0.9523      |
-| svr   | 0.00052532 | 0.02175594 | 0.4471              | 0.7205      |
+| Model | MSE                   | MAE                   | Directional Accuracy   | Final Equity           |
+|-------|-----------------------|-----------------------|------------------------|------------------------|
+| rf    | 6.385532388821028e-05 | 0.005718401569638982  | 0.5046583850931677     | 1.3472072423355714     |
+| xgb   | 6.580884924759668e-05 | 0.005803201699954351  | 0.5077639751552795     | 0.9168006578547507     |
+| lgbm  | 6.148874471814435e-05 | 0.005657574433607601  | 0.5201863354037267     | 1.2918106564069654     |
+| lr    | 6.01706938586862e-05  | 0.0055856916861299465 | 0.5015527950310559     | 1.1231970568765066     |
+| svr   | 0.0005249218994347663 | 0.021713136362065108  | 0.46273291925465837    | 0.7315102318087634     |
 
 **Best Model**: LightGBM (highest final equity)
 
 ### Final LightGBM Metrics
-- **MSE**: 5.8652379625116546e-05
-- **MAE**: 0.005581717623957068
-- **Directional Accuracy**: 0.5126050420168067
-- **Final Equity**: 1.1252386647447876
+- **MSE**: 6.0311266597022825e-05
+- **MAE**: 0.0055584900320102566
+- **Directional Accuracy**: 0.5667701863354038
+- **Final Equity**: 1.9595122230739497
 
 ### Plots
 Below are two key EDA plots included in the repository:
@@ -91,6 +91,14 @@ Below are two key EDA plots included in the repository:
 - **Price to Rolling Close Ratio**
 
    ![Price to Rolling Close Ratio](plots/Price_to_Rolling_Close_Ratio.png)
+
+### Key Learning
+Applying Log Transformation before and after Feature Engineering - 
+
+Before -> Final Equity = 1.003
+After -> Final Equity = 1.959
+
+In this experiment, the difference in performance comes from how the data pipeline interacts with financial time-series structure. Applying log transformation after feature engineering preserved the raw market movement characteristics during feature construction, allowing rolling statistics and momentum signals to capture more meaningful price dynamics. When log transformation was applied early, it likely reduced signal amplitude and weakened relationships between engineered features, leading to a model that could not extract strong predictive patterns. Since financial market data is highly noisy and does not strictly follow normal distribution assumptions, empirical performance can sometimes be better than theoretical preprocessing order. The comparison shows that the late log-transformation pipeline produced stronger directional signals and higher backtest equity, indicating better practical predictive utility for your dataset and model.
 
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request.
