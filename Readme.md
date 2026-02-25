@@ -56,6 +56,8 @@ The following models are trained and evaluated:
 - **LightGBM (lgbm)**: Efficient gradient boosting
 - **SVR (svr)**: Support Vector Regression
 
+Hyperparameter tuning is performed on the best-performing model using RandomizedSearchCV, optimizing for strategy equity.
+
 ### Metrics
 - **MSE**: Mean Squared Error (lower better)
 - **MAE**: Mean Absolute Error (lower better)
@@ -65,21 +67,25 @@ The following models are trained and evaluated:
 ## Results
 Based on the latest evaluation:
 
-| Model | MSE       | MAE       | Directional Accuracy | Final Equity |
-|-------|-----------|-----------|----------------------|--------------|
-| rf    | 0.00007803 | 0.00667636 | 0.4756              | 0.9434      |
-| xgb   | 0.00006936 | 0.00632260 | 0.4588              | 0.9044      |
-| lgbm  | 0.00006852 | 0.00625871 | 0.4773              | 1.0309      |
-| lr    | 0.00006129 | 0.00560635 | 0.5378              | 0.9523      |
-| svr   | 0.00052532 | 0.02175594 | 0.4471              | 0.7205      |
+| Model       | MSE          | MAE          | Directional Accuracy | Final Equity |
+|-------------|--------------|--------------|----------------------|--------------|
+| rf          | 9.137e-05    | 0.00697      | 0.499                | 2.048        |
+| xgb         | 8.669e-05    | 0.00674      | 0.531                | 3.439        |
+| lgbm        | 8.903e-05    | 0.00681      | 0.529                | 2.819        |
+| lr          | 8.714e-05    | 0.00671      | 0.560                | 2.846        |
+| svr         | 1.135e-04    | 0.00795      | 0.547                | 2.349        |
+| best_xgb    | 8.613e-05    | 0.00670      | 0.547                | 3.735        |
 
-**Best Model**: LightGBM (highest final equity)
+**Best Model**: Tuned XGBoost (highest final equity)
 
-### Final LightGBM Metrics
-- **MSE**: 5.8652379625116546e-05
-- **MAE**: 0.005581717623957068
-- **Directional Accuracy**: 0.5126050420168067
-- **Final Equity**: 1.1252386647447876
+### Final Tuned XGBoost Metrics
+- **MSE**: 8.613273634197784e-05
+- **MAE**: 0.006704356643201695
+- **Directional Accuracy**: 0.5472088215024121
+- **Final Equity**: 3.735016922473307
+
+### Tuned Models
+Hyperparameter tuning was performed on XGBoost using RandomizedSearchCV with a custom scorer optimizing for Final Equity. The tuned model outperforms the default XGBoost in both directional accuracy and strategy performance.
 
 ### Plots
 Below are two key EDA plots included in the repository:
@@ -91,6 +97,13 @@ Below are two key EDA plots included in the repository:
 - **Price to Rolling Close Ratio**
 
    ![Price to Rolling Close Ratio](plots/Price_to_Rolling_Close_Ratio.png)
+
+### Key Learning
+Applying Log Transformation before and after Feature Engineering -
+
+Before -> Final Equity = 3.439 After -> Final Equity = 3.735
+
+In the previous dataset, I applied the log transformation after completing feature engineering, and this approach already improved the model performance. This likely worked because the model first learned meaningful predictive features from the engineered variables, and the subsequent log transformation helped stabilize variance and reduce the impact of extreme price values during training. However, in the current experiment, applying log transformation before hyperparameter tuning produced better results. This may be because transforming the target variable earlier allowed the model to optimize parameters based on a more normalized and less skewed data distribution, which is particularly beneficial for stock price data that often contains heavy tails and large fluctuations. As a result, tuning the model on log-transformed data improved pattern learning and reduced prediction error compared to performing the transformation later in the pipeline.
 
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request.
