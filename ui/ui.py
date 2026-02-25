@@ -1,5 +1,6 @@
 import pickle
 import pandas as pd
+import numpy as np
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
@@ -85,6 +86,12 @@ def feature_engineer(df):
     df['HL_Range'] = (df['High'] - df['Low']) / (df['Close'] + 1e-6)
 
     df['Gap'] = (df['Open'] - df['Close'].shift(1)) / (df['Close'].shift(1) + 1e-6)
+
+    df['Open'] = np.log(df['Open'])
+    df['High'] = np.log(df['High'])
+    df['Low'] = np.log(df['Low'])
+    df['Close'] = np.log(df['Close'])
+    
     df['RSI'] = 100 - (100 / (1 + rs))
 
     df.drop(columns=['MA20','MA50'], inplace=True)
