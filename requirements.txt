@@ -6,3 +6,4 @@ lightgbm
 xgboost
 jupyter
 flask
+shap

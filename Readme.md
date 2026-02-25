@@ -38,14 +38,14 @@ This project predicts the next day's NIFTY50 index price using various machine l
    ```
 
 ## Usage
-1. **Data Collection**: Run `src/getting_data.py` to fetch or prepare the data.
+1. **Data Collection**: Go to NSE HISTORICAL DATA website and download NIFTY50 Index Data.
 2. **Exploratory Data Analysis**: Open `src/eda.ipynb` for data exploration.
 3. **Model Training and Evaluation**: Run `src/model.ipynb` to train models and view results.
 4. **Results**: Check `results/` for model performance metrics.
 
 ## Data
-- **Source**: NIFTY50 historical data (CSV format)
-- **Features**: Date, Open, High, Low, Close, Volume, plus engineered features like Return, RSI, Volatility, etc.
+- **Source**: NIFTY50 historical data (CSV format) from NSE Historical Data
+- **Features**: Date, Open, High, Low, Price, Volume, Change %, plus engineered features like Return, RSI, Volatility, etc.
 - **Target**: Next day's percentage return
 
 ## Models
@@ -98,6 +98,13 @@ Below are two key EDA plots included in the repository:
 
    ![Price to Rolling Close Ratio](plots/Price_to_Rolling_Price_Ratio.png)
 
+### SHAP Summary
+Below is an image which shows SHAP summay on models prediction
+
+- **SHAP**
+
+   ![SHAP Summary (avaiable in plots folder)](shap_summary.png)
+
 ### Key Learning
 Applying Log Transformation before and after Feature Engineering -
 
@@ -109,7 +116,7 @@ In the previous dataset, I applied the log transformation after completing featu
 Contributions are welcome! Please fork the repository and submit a pull request.
 
 ## License
-This project is licensed under the MIT License.</content>
+This project is licensed under the MIT License.
 
 ## Contact Information
-email - rentalarrajhans@gmail.com
+email - rentalarrajhans@gmail.com</content>
