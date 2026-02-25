@@ -103,7 +103,7 @@ Below is an image which shows SHAP summay on models prediction
 
 - **SHAP**
 
-   ![SHAP Summary (avaiable in plots folder)](shap_summary.png)
+   ![SHAP Summary (avaiable in plots folder)](plots/shap_summary.png)
 
 ### Key Learning
 Applying Log Transformation before and after Feature Engineering -
