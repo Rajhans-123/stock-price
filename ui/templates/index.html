@@ -11,28 +11,33 @@
 <form method="POST">
 
     <label>Open Price:</label><br>
-    <input type="text" name="Open" placeholder="Enter Open Price" required><br><br>
+    <input type="text" name="Open" required><br><br>
 
     <label>High Price:</label><br>
-    <input type="text" name="High" placeholder="Enter High Price" required><br><br>
+    <input type="text" name="High" required><br><br>
 
     <label>Low Price:</label><br>
-    <input type="text" name="Low" placeholder="Enter Low Price" required><br><br>
+    <input type="text" name="Low" required><br><br>
 
     <label>Close Price:</label><br>
-    <input type="text" name="Close" placeholder="Enter Close Price" required><br><br>
+    <input type="text" name="Price" required><br><br>
 
     <label>Volume:</label><br>
-    <input type="text" name="Volume" placeholder="Enter Volume" required><br><br>
+    <input type="text" name="Vol." required><br><br>
 
     <button type="submit">Predict Next Day Return</button>
 
 </form>
 
+{% if message %}
+<hr>
+<p style="color:red;"><b>{{ message }}</b></p>
+{% endif %}
+
 {% if prediction is not none %}
 <hr>
 <h3>Prediction Output</h3>
-<p>Predicted Return = {{ "%.4f"|format(prediction * 100) }}%</p>
+<p>Predicted Return = {{ "%.4f"|format(prediction) }}%</p>
 {% endif %}
 
 </body>
