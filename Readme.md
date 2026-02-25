@@ -96,7 +96,7 @@ Below are two key EDA plots included in the repository:
 
 - **Price to Rolling Close Ratio**
 
-   ![Price to Rolling Close Ratio](plots/Price_to_Rolling_Close_Ratio.png)
+   ![Price to Rolling Close Ratio](plots/Price_to_Rolling_Price_Ratio.png)
 
 ### Key Learning
 Applying Log Transformation before and after Feature Engineering -
