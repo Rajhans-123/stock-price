@@ -33,7 +33,9 @@ TRAINED_FEATURES = [
     "Trend50",
     "HL_Range",
     "Gap",
-    "RSI"
+    "RSI",
+    "Momentum_5",
+    "Momentum_10"
 ]
 
 # ==============================
@@ -72,6 +74,7 @@ def feature_engineer(df):
     df["High"] = np.log(df["High"])
     df["Low"] = np.log(df["Low"])
     df["Price"] = np.log(df["Price"])
+    df["Vol."] = np.log(df["Vol."] + 1)
 
     # Relative Volume
     df["Rel_Vol."] = df["Vol."] / df["Vol."].rolling(20).mean()
@@ -94,6 +97,9 @@ def feature_engineer(df):
     # Range & Gap
     df["HL_Range"] = (df["High"] - df["Low"]) / df["Price"]
     df["Gap"] = (df["Open"] - df["Price"].shift(1)) / df["Price"].shift(1)
+    df['Momentum_5'] = df['Price'] / df['Price'].shift(5) - 1
+    df['Momentum_10'] = df['Price'] / df['Price'].shift(10) - 1
+    df['Change %'] = df['Price'].pct_change() * 100
 
     # RSI (Wilder)
     delta = df["Price"].diff()

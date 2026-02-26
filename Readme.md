@@ -69,20 +69,19 @@ Based on the latest evaluation:
 
 | Model       | MSE          | MAE          | Directional Accuracy | Final Equity |
 |-------------|--------------|--------------|----------------------|--------------|
-| rf          | 9.137e-05    | 0.00697      | 0.499                | 2.048        |
-| xgb         | 8.669e-05    | 0.00674      | 0.531                | 3.439        |
-| lgbm        | 8.903e-05    | 0.00681      | 0.529                | 2.819        |
-| lr          | 8.714e-05    | 0.00671      | 0.560                | 2.846        |
-| svr         | 1.135e-04    | 0.00795      | 0.547                | 2.349        |
-| best_xgb    | 8.613e-05    | 0.00670      | 0.547                | 3.735        |
+| rf          | 9.166e-05    | 0.006937     | 0.51274              | 1.834        |
+| xgb         | 0.0001057    | 0.007725     | 0.51206              | 1.655        |
+| lgbm        | 9.213e-05    | 0.007053     | 0.48656              | 1.359        |
+| lr          | 9.051e-05    | 0.006801     | 0.54583              | 2.031        |
+| svr         | 0.0001462    | 0.009213     | 0.54238              | 2.027        |
 
 **Best Model**: Tuned XGBoost (highest final equity)
 
 ### Final Tuned XGBoost Metrics
-- **MSE**: 8.613273634197784e-05
-- **MAE**: 0.006704356643201695
-- **Directional Accuracy**: 0.5472088215024121
-- **Final Equity**: 3.735016922473307
+- **MSE**: 8.510334905970195e-05,
+- **MAE**: 0.006656164877960953,
+- **Directional Accuracy**: 0.580289455547898,
+- **Final Equity**: 4.45744576856662
 
 ### Tuned Models
 Hyperparameter tuning was performed on XGBoost using RandomizedSearchCV with a custom scorer optimizing for Final Equity. The tuned model outperforms the default XGBoost in both directional accuracy and strategy performance.
