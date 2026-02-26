@@ -107,7 +107,7 @@ Below is an image which shows SHAP summay on models prediction
 ### Key Learning
 Applying Log Transformation before and after Feature Engineering -
 
-Before -> Final Equity = 3.439 After -> Final Equity = 3.735
+Before -> Final Equity = 1.655 After -> Final Equity = 4.457
 
 In the previous dataset, I applied the log transformation after completing feature engineering, and this approach already improved the model performance. This likely worked because the model first learned meaningful predictive features from the engineered variables, and the subsequent log transformation helped stabilize variance and reduce the impact of extreme price values during training. However, in the current experiment, applying log transformation before hyperparameter tuning produced better results. This may be because transforming the target variable earlier allowed the model to optimize parameters based on a more normalized and less skewed data distribution, which is particularly beneficial for stock price data that often contains heavy tails and large fluctuations. As a result, tuning the model on log-transformed data improved pattern learning and reduced prediction error compared to performing the transformation later in the pipeline.
 
