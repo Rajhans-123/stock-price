@@ -64,13 +64,10 @@ def load_full_data():
     if os.path.exists(FULL_DATA_FILE):
         df = pd.read_csv(FULL_DATA_FILE)
 
-        # Convert date column properly
         df["Date"] = pd.to_datetime(df["Date"])
+        df.sort_values("Date", inplace=True)
 
-        df.set_index("Date", inplace=True)
-        df.sort_index(inplace=True)
-
-        return df
+        return df.reset_index(drop=True)
 
     else:
         return pd.DataFrame(
@@ -81,19 +78,10 @@ def load_full_data():
 def save_full_data(df):
     df = df.copy()
 
-    # Ensure Date column exists
-    if "Date" not in df.columns:
-        df.reset_index(inplace=True)
-
-    # Remove duplicate timestamps
     df.drop_duplicates(subset=["Date"], inplace=True)
-
-    # Sort time series
     df.sort_values("Date", inplace=True)
 
-    # Save with Date as index (stable time-series format)
-    df.set_index("Date", inplace=True)
-    df.to_csv(FULL_DATA_FILE)
+    df.to_csv(FULL_DATA_FILE, index=False)
 
     print("Full dataset safely updated.")
 
@@ -234,7 +222,19 @@ def home():
         new_row["Change %"] = change_pct
 
         # Append to full dataset (never truncated)
-        full_df = pd.concat([full_df, new_row], ignore_index=True)
+        raw_row = new_row[[
+            "Date",
+            "Open",
+            "High",
+            "Low",
+            "Price",
+            "Vol.",
+            "Change %"
+        ]]
+
+        full_df = pd.concat([full_df, raw_row], axis=0)
+        full_df.reset_index(drop=True, inplace=True)
+
         save_full_data(full_df)
 
         # Append
