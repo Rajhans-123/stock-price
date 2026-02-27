@@ -4,18 +4,36 @@ import pandas as pd
 import numpy as np
 from flask import Flask, render_template, request
 
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from src import re_train
+import threading
+
 app = Flask(__name__)
 
 # ==============================
 # CONFIG
 # ==============================
 
-MODEL_PATH = "models/best_xgb_model.pkl"
-BUFFER_FILE = "history_buffer.csv"
+MODELS_DIR = os.path.join(BASE_DIR, 'models')
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+
+os.makedirs(MODELS_DIR, exist_ok=True)
+os.makedirs(DATA_DIR, exist_ok=True)
+
+MODEL_PATH = os.path.join(MODELS_DIR, 'best_xgb_model.pkl')
+FULL_DATA_FILE = os.path.join(DATA_DIR, 'data1.csv')
+BUFFER_FILE = os.path.join(DATA_DIR, 'history_buffer.csv')
+
 WINDOW_SIZE = 100   # Keep more than 50 for safety
 
 # Load model
 model = pickle.load(open(MODEL_PATH, "rb"))
+ticker = 0
+model_lock = threading.Lock()
 
 TRAINED_FEATURES = [
     "Price",
@@ -41,6 +59,44 @@ TRAINED_FEATURES = [
 # ==============================
 # HISTORY MANAGEMENT
 # ==============================
+
+def load_full_data():
+    if os.path.exists(FULL_DATA_FILE):
+        df = pd.read_csv(FULL_DATA_FILE)
+
+        # Convert date column properly
+        df["Date"] = pd.to_datetime(df["Date"])
+
+        df.set_index("Date", inplace=True)
+        df.sort_index(inplace=True)
+
+        return df
+
+    else:
+        return pd.DataFrame(
+            columns=["Date", "Open", "High", "Low", "Price", "Change %", "Vol."]
+        )
+
+
+def save_full_data(df):
+    df = df.copy()
+
+    # Ensure Date column exists
+    if "Date" not in df.columns:
+        df.reset_index(inplace=True)
+
+    # Remove duplicate timestamps
+    df.drop_duplicates(subset=["Date"], inplace=True)
+
+    # Sort time series
+    df.sort_values("Date", inplace=True)
+
+    # Save with Date as index (stable time-series format)
+    df.set_index("Date", inplace=True)
+    df.to_csv(FULL_DATA_FILE)
+
+    print("Full dataset safely updated.")
+
 
 def load_history():
     if os.path.exists(BUFFER_FILE):
@@ -117,6 +173,19 @@ def feature_engineer(df):
 
     return df
 
+def background_retrain(df):
+    global model
+
+    try:
+        re_train.retrain_model(df, MODELS_DIR)
+
+        # Reload only after retrain completes
+        with model_lock:
+            model = pickle.load(open(MODEL_PATH, 'rb'))
+        print("Model successfully retrained and reloaded")
+
+    except Exception as e:
+        print("Retrain failed:", e)
 
 # ==============================
 # ROUTE
@@ -125,12 +194,16 @@ def feature_engineer(df):
 @app.route("/", methods=["GET", "POST"])
 def home():
 
+    global model
+    global ticker
+
     prediction = None
     message = None
 
     if request.method == "POST":
 
         history_df = load_history()
+        full_df = load_full_data()
 
         try:
             open_price = float(request.form["Open"])
@@ -160,6 +233,10 @@ def home():
 
         new_row["Change %"] = change_pct
 
+        # Append to full dataset (never truncated)
+        full_df = pd.concat([full_df, new_row], ignore_index=True)
+        save_full_data(full_df)
+
         # Append
         history_df = pd.concat([history_df, new_row], ignore_index=True)
 
@@ -187,8 +264,21 @@ def home():
             return render_template("index.html", prediction=None, message=message)
 
         try:
-            pred = model.predict(latest_row.values.reshape(1, -1))[0]
+            with model_lock:
+                pred = model.predict(latest_row.values.reshape(1, -1))[0]
             prediction = float(pred)
+
+            ticker += 1
+
+            if ticker > 50:
+                threading.Thread(
+                    target=background_retrain,
+                    args=(full_df.copy(),),
+                    daemon=True
+                ).start()
+
+                ticker = 0
+
         except Exception as e:
             message = f"Model prediction error: {str(e)}"
 
@@ -200,4 +290,4 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
