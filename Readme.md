@@ -40,7 +40,7 @@ This project predicts the next day's NIFTY50 index price using various machine l
 ## Usage
 1. **Data Collection**: Go to NSE HISTORICAL DATA website and download NIFTY50 Index Data.
 2. **Exploratory Data Analysis**: Open `src/eda.ipynb` for data exploration.
-3. **Model Training and Evaluation**: Run `src/model.ipynb` to train models and view results.
+3. **Model Training and Evaluation**: Run `src/model.py` to train models and view results.
 4. **Results**: Check `results/` for model performance metrics.
 5. **Model Retraining**: Run `src/re_train.py` to retrain the model with new data:
    ```bash
